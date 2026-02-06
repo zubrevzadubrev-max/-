@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Захириддин Мухаммад Бабур | Великий правитель и поэт</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&family=Noto+Serif+Display:ital@1&display=swap" rel="stylesheet">
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --gold: #d4af37;
+            --deep-blue: #0f172a;
+            --sand: #fdf6e3;
+            --accent: #8e1b1b;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--sand);
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)),
+                        url('https://images.unsplash.com/photo-1588614959060-4d144f28b207?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 15px auto;
+        }
+        .nav-link {
+            position: relative;
+            transition: 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        /* Стили для карты */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 8px solid white;
+            z-index: 10;
+        }
+        .leaflet-popup-content-wrapper {
+            background: var(--sand);
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 4px;
+        }
+        .oriental-pattern {
+            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+        }
+        .poem-card {
+            font-family: 'Noto Serif Display', serif;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .poem-card::before {
+            content: '“';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 150px;
+            color: rgba(212, 175, 55, 0.1);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-[1000] bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-[0.2em] text-slate-800">БАБУР</div>
+            <div class="hidden md:flex space-x-10 font-medium text-xs uppercase tracking-widest">
+                <a href="#home" class="nav-link">Главная</a>
+                <a href="#bio" class="nav-link">Биография</a>
+                <a href="#map-section" class="nav-link">Карта походов</a>
+                <a href="#baburname" class="nav-link">Бабур-наме</a>
+                <a href="#poetry" class="nav-link">Поэзия</a>
+            </div>
+        </div>
+    </nav>
+
+<!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center text-center text-white px-4 relative overflow-hidden">
+        <div class="absolute inset-0 oriental-pattern opacity-20"></div>
+        <div data-aos="zoom-out" data-aos-duration="2000" class="relative z-10">
+            <span class="text-gold tracking-[0.5em] uppercase text-sm mb-4 block font-semibold">Великий поэт и полководец</span>
+            <h1 class="text-6xl md:text-8xl mb-6 font-bold">Захириддин Мухаммад<br><span class="text-gold">Бабур</span></h1>
+            <div class="w-24 h-1 bg-gold mx-auto mb-8"></div>
+            <p class="text-xl md:text-2xl font-light italic opacity-90 max-w-3xl mx-auto leading-relaxed">
+                «Тот, кто не смог удержать свою родину, никогда не найдет покоя на чужбине».
+            </p>
+            <div class="mt-12">
+                <a href="#bio" class="px-10 py-4 bg-transparent border border-gold text-gold hover:bg-gold hover:text-slate-900 transition-all duration-500 font-bold uppercase tracking-widest text-sm">
+                    Начать путешествие
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Biography Section -->
+    <section id="bio" class="py-24 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-20">
+            <h2 class="text-5xl mb-4 section-title" data-aos="fade-up">Вехи судьбы</h2>
+            <p class="text-gray-500 italic">От правителя Ферганы до императора Индии</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-16 items-center mb-24">
+            <div data-aos="fade-right">
+                <div class="flex items-center mb-6">
+                    <span class="text-5xl font-bold text-gold/30 mr-4">01.</span>
+                    <h3 class="text-3xl text-slate-800">Наследие Тимуридов</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed text-lg mb-6">
+                    Родившийся в 1483 году в Андижане, Бабур был не просто наследником престола Ферганы. В его жилах текла кровь двух величайших завоевателей Азии — <strong>Тамерлана</strong> и <strong>Чингисхана</strong>.
+                </p>
+                <div class="bg-white p-6 border-l-4 border-gold shadow-lg italic text-gray-700">
+                    «В двенадцать лет я стал царем... Тогда я не знал, что весь мир станет моей ареной».
+                </div>
+            </div>
+            <div class="relative" data-aos="zoom-in">
+                <div class="absolute -top-4 -left-4 w-full h-full border-2 border-gold rounded-lg -z-10"></div>
+                <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=800&q=80" alt="Восточный дворец" class="rounded-lg shadow-2xl w-full">
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="order-2 md:order-1 relative" data-aos="zoom-in">
+                <div class="absolute -bottom-4 -right-4 w-full h-full border-2 border-gold rounded-lg -z-10"></div>
+                <img src="https://images.unsplash.com/photo-1524492707947-54a2a443fd26?auto=format&fit=crop&w=800&q=80" alt="Индийская архитектура" class="rounded-lg shadow-2xl w-full">
+            </div>
+            <div class="order-1 md:order-2" data-aos="fade-left">
+                <div class="flex items-center mb-6">
+                    <span class="text-5xl font-bold text-gold/30 mr-4">02.</span>
+                    <h3 class="text-3xl text-slate-800">Рождение империи</h3>
+                </div>
+                <p class="text-gray-600 leading-relaxed text-lg mb-6">
+                    После потери Самарканда и родной Ферганы, Бабур не сдался. Захватив Кабул, он обратил взор на богатые земли Индостана. В 1526 году в битве при <strong>Панипате</strong> он совершил невозможное, разгромив превосходящие силы султана Ибрагима Лоди.
+
+</p>
+                <p class="text-gray-600 leading-relaxed text-lg">
+                    Так было положено начало династии Великих Моголов, подарившей миру Тадж-Махал и золотой век искусства.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section id="map-section" class="py-24 bg-slate-100 oriental-pattern">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl mb-4 section-title" data-aos="fade-up">География походов</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Интерактивная карта ключевых точек на жизненном пути Бабура. Нажмите на маркеры, чтобы узнать больше.</p>
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="200">
+                <div id="map"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-blue-500">
+                    <h4 class="font-bold text-lg mb-2">1. Андижан</h4>
+                    <p class="text-sm text-gray-500">Место рождения и первые шаги во власти. Начало пути в 1494 году.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-amber-500">
+                    <h4 class="font-bold text-lg mb-2">2. Кабул</h4>
+                    <p class="text-sm text-gray-500">Оплот Бабура с 1504 года. Место, которое он любил больше всего и где завещал себя похоронить.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-red-500">
+                    <h4 class="font-bold text-lg mb-2">3. Дели (Панипат)</h4>
+                    <p class="text-sm text-gray-500">Великая победа 1526 года и основание Империи Великих Моголов.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Baburname Section -->
+    <section id="baburname" class="bg-slate-900 py-24 px-6 text-white overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-64 h-64 bg-gold/10 blur-[120px] rounded-full"></div>
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl mb-4 section-title" data-aos="fade-up">Бабур-наме</h2>
+                <p class="text-gold tracking-widest uppercase text-sm">Бессмертный литературный памятник</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="grid grid-cols-1 gap-8" data-aos="fade-right">
+                    <div class="flex gap-6 items-start">
+                        <div class="p-4 bg-gold/10 rounded-lg text-gold shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2">Честная автобиография</h4>
+                            <p class="text-gray-400">Впервые в истории восточной литературы правитель описывает свою жизнь без прикрас, признавая ошибки и слабости.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 items-start">
+                        <div class="p-4 bg-gold/10 rounded-lg text-gold shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a2.5 2.5 0 012.5 2.5V17m-5 1h6m-7-14h.01M9 16h.01" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2">Энциклопедия природы</h4>
+                            <p class="text-gray-400">Детальные зарисовки климата, животных и растений Индии и Средней Азии, имеющие научную ценность по сей день.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative" data-aos="fade-left">
+                    <div class="p-8 bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl relative">
+                        <p class="text-2xl font-serif italic text-gold mb-6 leading-relaxed">
+                            "Я написал это не для того, чтобы жаловаться: я написал правду. Я изложил не для того, чтобы выставить себя в хорошем свете: я просто записал то, что было."
+                        </p>
+                        <p class="text-right text-sm text-gray-500 uppercase tracking-widest">— Отрывок из вступления</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Poetry Section -->
+    <section id="poetry" class="py-24 px-6 bg-white relative overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-5xl mb-16 section-title" data-aos="fade-up">Поэтическое наследие</h2>
+
+            <div class="poem-card p-12 md:p-20 shadow-2xl rounded-3xl border border-gray-100 mb-12" data-aos="zoom-in">
+                <div class="space-y-6 text-2xl md:text-3xl text-slate-800 leading-relaxed italic">
+                    <p>Чужбина — это клетка, где душа томится,</p>
+                    <p>В родные дали сердце жаждет устремиться.</p>
+                    <p>Хоть царь я в Индии, но в памяти моей —</p>
+                    <p>Андижанская пыль всего дороже и милей.</p>
+                </div>
+                <div class="mt-10 pt-10 border-t border-gold/20 flex justify-center items-center">
+                    <div class="w-12 h-px bg-gold mr-4"></div>
+                    <span class="text-gold font-bold tracking-widest uppercase text-sm">Газель о разлуке</span>
+                    <div class="w-12 h-px bg-gold ml-4"></div>
+                </div>
+            </div>
+
+            <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                Поэзия Бабура — это уникальное сочетание лирики, мудрости и солдатской прямоты. Он мастерски владел жанрами газели и рубаи на языке тюрки.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-16 px-6 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-8 md:mb-0">
+                <div class="text-3xl font-bold tracking-widest mb-2">БАБУР</div>
+                <p class="text-gray-500 text-sm">Великое наследие бессмертно.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#home" class="text-gray-400 hover:text-gold transition-colors">Главная</a>
+                <a href="#bio" class="text-gray-400 hover:text-gold transition-colors">Биография</a>
+                <a href="#map-section" class="text-gray-400 hover:text-gold transition-colors">Карта</a>
+                <a href="#poetry" class="text-gray-400 hover:text-gold transition-colors">Поэзия</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-slate-800 text-center text-gray-600 text-xs uppercase tracking-[0.3em]">
+            &copy; 2024 Мемориальный проект — Захириддин Мухаммад Бабур
+        </div>
+    </footer>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 150
+        });
+
+        // Initialize Map
+        const map = L.map('map').setView([32.0, 70.0], 4);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            className: 'map-tiles'
+        }).addTo(map);
+
+        // Путь Бабура (Координаты)
+        const locations = [
+            {
+                name: "Андижан",
+                coords: [40.7833, 72.3333],
+                desc: "<b>1483:</b> Рождение Бабура. <b>1494:</b> Восхождение на трон Ферганы."
+            },
+            {
+                name: "Самарканд",
+                coords: [39.6542, 66.9597],
+                desc: "<b>1497-1512:</b> Город мечты. Трижды завоеванный и трижды потерянный Бабуром."
+            },
+            {
+                name: "Кабул",
+                coords: [34.5553, 69.2075],
+                desc: "<b>1504:</b> Завоевание Кабула. Стал новой родиной для изгнанного правителя."
+            },
+            {
+                name: "Панипат",
+                coords: [29.3909, 76.9635],
+                desc: "<b>1526:</b> Великая битва. Победа над Ибрагимом Лоди и путь к Дели."
+            },
+            {
+                name: "Агра",
+                coords: [27.1767, 78.0081],
+                desc: "<b>1530:</b> Последняя столица Бабура. Основание садов и место кончины."
+            }
+        ];
+
+        // Добавление маркеров и линии пути
+        const pathCoords = locations.map(loc => loc.coords);
+
+        const polyline = L.polyline(pathCoords, {
+            color: '#d4af37',
+            weight: 3,
+            dashArray: '10, 10',
+            opacity: 0.8
+        }).addTo(map);
+
+        locations.forEach(loc => {
+            const marker = L.circleMarker(loc.coords, {
+                radius: 8,
+                fillColor: "#8e1b1b",
+                color: "#fff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 1
+            }).addTo(map);
+
+            // FIX: use template literal string
+            marker.bindPopup(`<h4 class='font-bold text-slate-800'>${loc.name}</h4><p class='text-xs mt-1'>${loc.desc}</p>`);
+        });
+
+        // Smooth Navbar Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-white', 'py-2');
+                nav.classList.remove('bg-white/90', 'py-4');
+            } else {
+                nav.classList.remove('bg-white', 'py-2');
+                nav.classList.add('bg-white/90', 'py-4');
+            }
+        });
+
+        // Scroll Fix
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
